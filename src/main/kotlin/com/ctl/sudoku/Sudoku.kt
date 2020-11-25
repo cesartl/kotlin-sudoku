@@ -3,17 +3,19 @@ package com.ctl.sudoku
 typealias Value = Int
 typealias Vector<A> = List<A>
 
+
 sealed class Cell
 data class Known(val value: Value) : Cell()
 data class Unknown(val candidates: List<Value>) : Cell()
 
-
 data class Position(val x: Int, val y: Int)
 
-data class Sudoku(val grid: Vector<Vector<Cell>>) {
+typealias Row = Vector<Cell>
+
+data class Sudoku(val rows: Vector<Row>) {
 
     val isFinished: Boolean by lazy {
-        grid.flatten().all { it is Known }
+        rows.flatten().all { it is Known }
     }
 
     fun isValueAllowed(position: Position, value: Value): Boolean {
@@ -23,30 +25,29 @@ data class Sudoku(val grid: Vector<Vector<Cell>>) {
     }
 
     private fun isValueAllowedInRow(position: Position, value: Value): Boolean {
-        return !grid[position.x].contains(Known(value))
+        return !rows[position.x].contains(Known(value))
     }
 
     private fun isValueAllowedInColumn(position: Position, value: Value): Boolean {
-        return !grid.transpose()[position.y].contains(Known(value))
+        return !rows.transpose()[position.y].contains(Known(value))
     }
 
     private fun isValueAllowedInSquare(position: Position, value: Value): Boolean {
         val ci = position.x / 3
         val cj = position.y / 3
-        val squareCells: List<Cell> = grid.chunked(3)[ci].flatMap { row -> row.chunked(3)[cj] }
+        val squareCells: List<Cell> = rows.chunked(3)[ci].flatMap { row -> row.chunked(3)[cj] }
         return !squareCells.contains(Known(value))
     }
 }
 
 tailrec fun Sudoku.solve(): Sudoku? {
-    val reduced = this.grid.withIndex()
+    val reducedRows = this.rows.withIndex()
         .map { (rowIdx, row) ->
             row.withIndex()
                 .map { (colIdx, cell) ->
+                    val position = Position(rowIdx, colIdx)
                     when (cell) {
-                        is Unknown -> Unknown(cell.candidates.filter { value ->
-                            isValueAllowed(Position(rowIdx, colIdx), value)
-                        })
+                        is Unknown -> Unknown(cell.candidates.filter { value -> isValueAllowed(position, value) })
                         else -> cell
                     }
                 }
@@ -57,10 +58,10 @@ tailrec fun Sudoku.solve(): Sudoku? {
                     }
                 }
         }
-    return if (reduced == this.grid) {
+    return if (reducedRows == this.rows) {
         if (this.isFinished) this else null
     } else {
-        Sudoku(reduced).solve()
+        Sudoku(reducedRows).solve()
     }
 }
 

@@ -1,7 +1,7 @@
 package com.ctl.sudoku
 
 fun Sudoku.display() {
-    grid.chunked(3).forEach { rows ->
+    rows.chunked(3).forEach { rows ->
         rows.forEach { row ->
             println(row.chunked(3).joinToString(" ") { it.joinToString("") { cell -> cell.print() } })
         }
