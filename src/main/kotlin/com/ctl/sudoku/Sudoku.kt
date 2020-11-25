@@ -1,14 +1,12 @@
 package com.ctl.sudoku
 
-sealed class Cell
-
 typealias Value = Int
+typealias Vector<A> = List<A>
 
+sealed class Cell
 data class Fixed(val e: Value) : Cell()
 data class Unknown(val candidates: List<Value>) : Cell()
 
-
-typealias Vector<A> = List<A>
 
 data class Position(val x: Int, val y: Int)
 
