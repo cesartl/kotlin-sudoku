@@ -7,10 +7,10 @@ internal class SudokuTest {
 
     @Test
     internal fun sudokuTest() {
-        val sudoku = Sudoku.parse(getLines("grid1.txt"))
+        val sudoku = parseSudoku(getLines("grid1.txt"))
         sudoku.display()
         println()
-        Sudoku.solve(sudoku)?.display()
+        sudoku.solve()?.display()
     }
 
     private fun getStream(file: String): InputStream = this.javaClass.classLoader.getResourceAsStream(file)
