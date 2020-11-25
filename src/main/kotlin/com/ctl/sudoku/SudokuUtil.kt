@@ -11,7 +11,7 @@ fun Sudoku.display() {
 
 fun Cell.print(): String {
     return when (this) {
-        is Fixed -> this.e.toString()
+        is Known -> this.value.toString()
         is Unknown -> "."
     }
 }
@@ -19,7 +19,7 @@ fun Cell.print(): String {
 fun parseCell(char: Char): Cell {
     return when (char) {
         '0', '.' -> Unknown((1 until 10).toList())
-        else -> Fixed(char.toString().toInt())
+        else -> Known(char.toString().toInt())
     }
 }
 
