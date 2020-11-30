@@ -1,8 +1,6 @@
 package com.ctl.sudoku
 
 typealias Value = Int
-typealias Vector<A> = List<A>
-
 
 sealed class Cell
 data class Known(val value: Value) : Cell()
@@ -10,9 +8,9 @@ data class Unknown(val candidates: List<Value>) : Cell()
 
 data class Position(val x: Int, val y: Int)
 
-typealias Row = Vector<Cell>
+typealias Row = List<Cell>
 
-data class Sudoku(val rows: Vector<Row>) {
+data class Sudoku(val rows: List<Row>) {
 
     val isFinished: Boolean by lazy {
         rows.flatten().all { it is Known }
