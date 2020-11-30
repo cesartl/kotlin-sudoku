@@ -15,13 +15,7 @@ data class Sudoku(val rows: List<Row>) {
     val isFinished: Boolean by lazy {
         rows.flatten().all { it is Known }
     }
-
-    fun isValueAllowed(position: Position, value: Value): Boolean {
-        return isValueAllowedInRow(position, value)
-                && isValueAllowedInColumn(position, value)
-                && isValueAllowedInSquare(position, value)
-    }
-
+    
     private fun isValueAllowedInRow(position: Position, value: Value): Boolean {
         return !rows[position.x].contains(Known(value))
     }
@@ -35,6 +29,12 @@ data class Sudoku(val rows: List<Row>) {
         val cj = position.y / 3
         val squareCells: List<Cell> = rows.chunked(3)[ci].flatMap { row -> row.chunked(3)[cj] }
         return !squareCells.contains(Known(value))
+    }
+
+    fun isValueAllowed(position: Position, value: Value): Boolean {
+        return isValueAllowedInRow(position, value)
+                && isValueAllowedInColumn(position, value)
+                && isValueAllowedInSquare(position, value)
     }
 }
 
