@@ -6,7 +6,7 @@ import java.io.InputStream
 internal class SudokuTest {
 
     @Test
-    internal fun sudokuTest() {
+    fun sudokuTest() {
         val sudoku = parseSudoku(getLines("grid1.txt")!!)
         sudoku.display()
         println()
